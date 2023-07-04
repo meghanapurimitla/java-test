@@ -1,32 +1,72 @@
 pipeline {
-    agent any
-
-    environment {
-        function_name = 'java-sample'
+  parameters {
+    string(name: 'PARAMETER_NAME', defaultValue: 'default_value', description: 'Description of the parameter')
+  }
+  
+  stages {
+    stage('Read Environment Variables') {
+      steps {
+        script {
+          // Read default Jenkins environment variables
+          def jenkinsEnvVars = env
+          echo "Jenkins Build Number: ${jenkinsEnvVars.BUILD_NUMBER}"
+          echo "Jenkins Job Name: ${jenkinsEnvVars.JOB_NAME}"
+          echo "Jenkins Workspace: ${jenkinsEnvVars.WORKSPACE}"
+          // Add more environment variables as needed
+        }
+      }
     }
-
-    stages {
-        stage('Build') {
+    
+    stage('Build') {
+      steps {
+        echo "This is the build stage"
+      }
+    }
+  stage ('Test') {
             steps {
-                echo 'Build'
-                sh 'mvn package'
+                echo 'code will Test here'
             }
         }
 
-        stage('Push') {
+        stage ('Sonar Scanning') {
             steps {
-                echo 'Push'
-
-                sh "aws s3 cp target/sample-1.0.3.jar s3://bermtecbatch31"
+                echo 'Sonar Scanning will scan the code here'
             }
         }
 
-        stage('Deploy') {
+        stage('Publish to Artifactory') {
             steps {
-                echo 'Build'
-
-                sh "aws lambda update-function-code --function-name $function_name --s3-bucket bermtecbatch31 --s3-key sample-1.0.3.jar"
+                echo 'Publish to Artifactory'
             }
+        }
+
+        stage ('Deploy to Dev') {
+            steps {
+                echo 'Deploy to Dev'
+            }
+        }
+
+        stage ('Deploy to Test') {
+            steps {
+                echo 'Deploy to Test'
+            }
+        }
+
+        stage ('Deploy to UAT') {
+            steps {
+                echo 'Deploy to UAT'
+            }
+        }
+        stage ('Deploy to Stage') {
+            steps {
+                echo 'Deploy to Stage'
+            }
+        }
+
+        stage ('Deploy to prod'){
+            steps{
+                echo 'Deploy to prod which is used by customers'
+            } 
         }
     }
 }
