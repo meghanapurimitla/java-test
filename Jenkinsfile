@@ -23,51 +23,95 @@ pipeline {
         echo "This is the build stage"
       }
     }
-  stage ('Test') {
-            steps {
-                echo 'code will Test here'
-            }
-        }
-
-        stage ('Sonar Scanning') {
-            steps {
-                echo 'Sonar Scanning will scan the code here'
-            }
-        }
-
-        stage('Publish to Artifactory') {
-            steps {
-                echo 'Publish to Artifactory'
-            }
-        }
-
-        stage ('Deploy to Dev') {
-            steps {
-                echo 'Deploy to Dev'
-            }
-        }
-
-        stage ('Deploy to Test') {
-            steps {
-                echo 'Deploy to Test'
-            }
-        }
-
-        stage ('Deploy to UAT') {
-            steps {
-                echo 'Deploy to UAT'
-            }
-        }
-        stage ('Deploy to Stage') {
-            steps {
-                echo 'Deploy to Stage'
-            }
-        }
-
-        stage ('Deploy to prod'){
-            steps{
-                echo 'Deploy to prod which is used by customers'
-            } 
-        }
+    
+    stage('Test') {
+      steps {
+        echo 'Code will be tested here'
+      }
     }
+    
+    stage('SonarQube Analysis') {
+      steps {
+        // Run SonarQube analysis
+        // Replace the placeholder values with actual SonarQube scanner commands or plugin configurations
+        // Example: sh 'sonar-scanner -Dsonar.projectKey=my-project -Dsonar.sources=. -Dsonar.host.url=http://sonarqube-server:9000'
+        echo 'Running SonarQube analysis'
+      }
+    }
+    
+    stage('Publish to Artifactory') {
+      steps {
+        echo 'Publish to Artifactory'
+      }
+    }
+    
+    stage('Deploy to Dev') {
+      steps {
+        echo 'Deploy to Dev'
+      }
+    }
+    
+    stage('Deploy to Test') {
+      steps {
+        echo 'Deploy to Test'
+      }
+    }
+    
+    stage('Deploy to UAT') {
+      steps {
+        echo 'Deploy to UAT'
+      }
+    }
+    
+    stage('Deploy to Stage') {
+      steps {
+        echo 'Deploy to Stage'
+      }
+    }
+    
+    stage('Deploy to Prod') {
+      steps {
+        echo 'Deploy to Prod which is used by customers'
+      } 
+    }
+  }
+  
+  post {
+    always {
+      // Actions to perform regardless of the pipeline status
+      echo 'This post step always executes'
+    }
+    
+    success {
+      // Actions to perform only if the pipeline succeeds
+      echo 'This post step executes on success'
+      emailext (
+        subject: "Pipeline Success: ${env.JOB_NAME}",
+        body: "The pipeline ${env.JOB_NAME} succeeded.",
+        to: "meghanapurimitla@gmail.com"
+      )
+    }
+    
+    failure {
+      // Actions to perform only if the pipeline fails
+      echo 'This post step executes on failure'
+      emailext (
+        subject: "Pipeline Failure: ${env.JOB_NAME}",
+        body: "The pipeline ${env.JOB_NAME} failed. Please check the logs.",
+        to: "meghanapurimitla@gmail.com"
+      )
+    }
+    
+    unstable {
+      // Actions to perform only if the pipeline is marked as unstable
+      echo 'This post step executes on unstable'
+      emailext (
+        subject: "Pipeline Unstable: ${env.JOB_NAME}",
+        body: "The pipeline ${env.JOB_NAME} is unstable.",
+        to: "meghanapurimitla@gmail.com"
+      )
+    }
+  }
 }
+
+
