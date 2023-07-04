@@ -1,4 +1,5 @@
 pipeline {
+  agent any
   parameters {
     string(name: 'PARAMETER_NAME', defaultValue: 'default_value', description: 'Description of the parameter')
   }
