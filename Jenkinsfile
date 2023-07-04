@@ -2,6 +2,7 @@ pipeline {
   agent any
   parameters {
     string(name: 'PARAMETER_NAME', defaultValue: 'default_value', description: 'Description of the parameter')
+    choice(name: 'ENVIRONMENT', choices: ['DEV', 'TEST', 'UAT', 'PROD'], description: 'Select the deployment environment')
   }
   
   stages {
@@ -71,10 +72,14 @@ pipeline {
     
     stage('Deploy to Prod') {
       when {
-        expression { params.ENVIRNOMENT == 'PROD' }
+        expression { params.ENVIRONMENT == 'PROD' }
+      }
       steps {
         echo 'Deploy to Prod which is used by customers'
-       input(message: 'Are you ready for production?', ok: 'Proceed to production')
+        input(
+          message: 'Are you ready for production?',
+          ok: 'Proceed to production'
+        )
       } 
     }
   }
@@ -115,6 +120,4 @@ pipeline {
       )
     }
   }
-}
-
 }
