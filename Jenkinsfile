@@ -72,6 +72,7 @@ pipeline {
     stage('Deploy to Prod') {
       steps {
         echo 'Deploy to Prod which is used by customers'
+       input(message: 'Are you ready for production?', ok: 'Proceed to production')
       } 
     }
   }
